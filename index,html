@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Camera Interface</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="particleCanvas"></canvas>
+    
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Glass Card - Initial State -->
+        <div class="glass-card" id="glassCard">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-icon" id="logoIcon">
+                    <svg viewBox="0 0 100 100" class="logo-svg">
+                        <circle cx="50" cy="50" r="45" class="logo-ring"/>
+                        <circle cx="50" cy="50" r="35" class="logo-ring-inner"/>
+                        <circle cx="50" cy="50" r="20" class="logo-core"/>
+                        <path d="M50 15 L50 25 M50 75 L50 85 M15 50 L25 50 M75 50 L85 50" class="logo-crosshair"/>
+                    </svg>
+                </div>
+                <h1 class="title">CYBER<span class="title-accent">CAM</span></h1>
+                <p class="subtitle">AI-Powered Hand Tracking Interface</p>
+            </div>
+            
+            <!-- Open Camera Button -->
+            <button class="open-camera-btn" id="openCameraBtn">
+                <span class="btn-icon">📷</span>
+                <span class="btn-text">OPEN CAMERA</span>
+                <div class="btn-glow"></div>
+                <div class="btn-ripple"></div>
+            </button>
+            
+            <!-- Features List -->
+            <div class="features">
+                <div class="feature-item">
+                    <span class="feature-icon">🤚</span>
+                    <span class="feature-text">Hand Tracking</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">✌️</span>
+                    <span class="feature-text">Gesture Control</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🎯</span>
+                    <span class="feature-text">Real-time AI</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Camera Interface - Hidden Initially -->
+        <div class="camera-interface" id="cameraInterface">
+            <!-- Loading HUD -->
+            <div class="loading-hud" id="loadingHud">
+                <div class="loading-lines">
+                    <div class="loading-line" data-step="1">
+                        <span class="loading-indicator"></span>
+                        <span class="loading-text">INITIALIZING CAMERA...</span>
+                    </div>
+                    <div class="loading-line" data-step="2">
+                        <span class="loading-indicator"></span>
+                        <span class="loading-text">CONNECTING DEVICE...</span>
+                    </div>
+                    <div class="loading-line" data-step="3">
+                        <span class="loading-indicator"></span>
+                        <span class="loading-text">LOADING AI MODEL...</span>
+                    </div>
+                    <div class="loading-line" data-step="4">
+                        <span class="loading-indicator"></span>
+                        <span class="loading-text">CALIBRATING HAND TRACKER...</span>
+                    </div>
+                    <div class="loading-line ready" data-step="5">
+                        <span class="loading-indicator"></span>
+                        <span class="loading-text">READY</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Camera Container -->
+            <div class="camera-container" id="cameraContainer">
+                <!-- Video Element -->
+                <video id="videoElement" autoplay playsinline></video>
+                
+                <!-- Canvas for Hand Tracking -->
+                <canvas id="trackingCanvas"></canvas>
+                
+                <!-- Canvas for Blur Effect -->
+                <canvas id="blurCanvas"></canvas>
+                
+                <!-- Futuristic Frame Overlay -->
+                <div class="frame-overlay">
+                    <!-- Corner Frames -->
+                    <div class="corner corner-tl"></div>
+                    <div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div>
+                    <div class="corner corner-br"></div>
+                    
+                    <!-- Scan Line -->
+                    <div class="scan-line"></div>
+                    
+                    <!-- Crosshair -->
+                    <div class="crosshair">
+                        <div class="crosshair-h"></div>
+                        <div class="crosshair-v"></div>
+                        <div class="crosshair-center"></div>
+                    </div>
+                    
+                    <!-- Grid Overlay -->
+                    <div class="grid-overlay"></div>
+                </div>
+                
+                <!-- HUD Elements -->
+                <div class="hud-overlay">
+                    <!-- Top Left HUD -->
+                    <div class="hud-section hud-top-left">
+                        <div class="hud-item rec-indicator">
+                            <span class="rec-dot"></span>
+                            <span class="rec-text">REC</span>
+                        </div>
+                        <div class="hud-item fps-counter">
+                            <span class="hud-label">FPS:</span>
+                            <span class="hud-value" id="fpsValue">60</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Right HUD -->
+                    <div class="hud-section hud-top-right">
+                        <div class="hud-item status-ai">
+                            <span class="ai-dot"></span>
+                            <span class="hud-text">AI ACTIVE</span>
+                        </div>
+                        <div class="hud-item camera-status">
+                            <span class="hud-label">Status:</span>
+                            <span class="hud-value" id="cameraStatus">CAMERA READY</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom Left HUD -->
+                    <div class="hud-section hud-bottom-left">
+                        <div class="hud-item tracking-status">
+                            <span class="hud-label">Tracking:</span>
+                            <span class="hud-value" id="trackingStatus">SCANNING</span>
+                        </div>
+                        <div class="hud-item finger-count">
+                            <span class="hud-label">Fingers:</span>
+                            <span class="hud-value" id="fingerCount">0</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom Right HUD -->
+                    <div class="hud-section hud-bottom-right">
+                        <div class="hud-item gesture-display">
+                            <span class="hud-label">Gesture:</span>
+                            <span class="hud-value" id="gestureValue">NONE</span>
+                        </div>
+                        <div class="hud-item blur-status">
+                            <span class="hud-label">Blur:</span>
+                            <span class="hud-value" id="blurStatus">OFF</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Center Indicators -->
+                    <div class="hud-center">
+                        <div class="target-indicator">
+                            <div class="target-ring"></div>
+                            <div class="target-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Film Effects -->
+                <div class="film-effects">
+                    <div class="grain"></div>
+                    <div class="vignette"></div>
+                    <div class="light-sweep"></div>
+                </div>
+            </div>
+            
+            <!-- Close Button -->
+            <button class="close-camera-btn" id="closeCameraBtn">
+                <span>✕</span>
+            </button>
+        </div>
+        
+        <!-- Error Panel -->
+        <div class="error-panel" id="errorPanel">
+            <div class="error-icon">⚠️</div>
+            <h2 class="error-title">Camera Permission Required</h2>
+            <p class="error-message">Please allow camera access to use the hand tracking interface.</p>
+            <button class="try-again-btn" id="tryAgainBtn">
+                <span>Try Again</span>
+            </button>
+        </div>
+    </main>
+    
+    <!-- MediaPipe Scripts -->
+    <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/hands.min.js)"></script>
+    <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.min.js)"></script>
+    <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1675466124/drawing_utils.min.js)"></script>
+    
+    <!-- Main Script -->
+    <script src="script.js"></script>
+</body>
+</html>
